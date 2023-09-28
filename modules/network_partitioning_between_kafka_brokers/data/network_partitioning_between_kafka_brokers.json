@@ -128,7 +128,7 @@
       "name": "cell_17",
       "type": "OP_LANG",
       "enabled": true,
-      "content": "host | host_name=$HOST_NAME | invoke_network_checker($BROKER_2_IP, $BROKER_1_IP)"
+      "content": "host | host_name=$HOST_NAME | invoke_network_check($BROKER_2_IP, $BROKER_1_IP)"
     }
   ]
 }
