@@ -1,0 +1,134 @@
+{
+  "name": "network_partitioning_between_kafka_brokers",
+  "description": "This incident type refers to a situation where there is an issue with the communication between Kafka brokers due to network partitioning. A network partition is a situation where a network is split into two or more parts, and communication between them is disrupted. This issue can lead to data inconsistency, loss of messages, delayed message delivery, and other related problems. As a result, it is important to quickly detect and resolve these incidents to prevent any downstream impact on the system.",
+  "params": [
+    {
+      "name": "BROKER_2_IP",
+      "value": ""
+    },
+    {
+      "name": "BROKER_1_IP",
+      "value": ""
+    },
+    {
+      "name": "KAFKA_BROKER_IP",
+      "value": ""
+    },
+    {
+      "name": "HOST_NAME",
+      "value": ""
+    },
+    {
+      "name": "K8S_CLUSTER_NAME",
+      "value": ""
+    },
+    {
+      "name": "NAMESPACE",
+      "value": ""
+    }
+  ],
+  "cells": [
+    {
+      "name": "cell_1",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Network Partitioning Between Kafka Brokers.\nThis incident type refers to a situation where there is an issue with the communication between Kafka brokers due to network partitioning. A network partition is a situation where a network is split into two or more parts, and communication between them is disrupted. This issue can lead to data inconsistency, loss of messages, delayed message delivery, and other related problems. As a result, it is important to quickly detect and resolve these incidents to prevent any downstream impact on the system."
+    },
+    {
+      "name": "cell_2",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check the status of Kafka brokers"
+    },
+    {
+      "name": "cell_3",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "(host | host_name=$HOST_NAME) union (pod | k8s_cluster_name=$K8S_CLUSTER_NAME | namespace=$NAMESPACE) | `systemctl status kafka`"
+    },
+    {
+      "name": "cell_4",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check the logs of Kafka brokers for any errors related to network partitioning"
+    },
+    {
+      "name": "cell_5",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "(host | host_name=$HOST_NAME) union (pod | k8s_cluster_name=$K8S_CLUSTER_NAME | namespace=$NAMESPACE) | `journalctl -u kafka | grep \"network partitioning\"`"
+    },
+    {
+      "name": "cell_6",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check the network configuration of Kafka brokers"
+    },
+    {
+      "name": "cell_7",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "(host | host_name=$HOST_NAME) union (pod | k8s_cluster_name=$K8S_CLUSTER_NAME | namespace=$NAMESPACE) | `ifconfig`"
+    },
+    {
+      "name": "cell_8",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check the network routing tables of Kafka brokers"
+    },
+    {
+      "name": "cell_9",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "(host | host_name=$HOST_NAME) union (pod | k8s_cluster_name=$K8S_CLUSTER_NAME | namespace=$NAMESPACE) | `route -n`"
+    },
+    {
+      "name": "cell_10",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Verify the network connectivity between Kafka brokers"
+    },
+    {
+      "name": "cell_11",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "(host | host_name=$HOST_NAME) union (pod | k8s_cluster_name=$K8S_CLUSTER_NAME | namespace=$NAMESPACE) | `ping ${KAFKA_BROKER_IP}`"
+    },
+    {
+      "name": "cell_12",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check the firewall settings to ensure that the necessary ports are open for Kafka communication"
+    },
+    {
+      "name": "cell_13",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "(host | host_name=$HOST_NAME) union (pod | k8s_cluster_name=$K8S_CLUSTER_NAME | namespace=$NAMESPACE) | `iptables -L`"
+    },
+    {
+      "name": "cell_14",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check the disk usage of Kafka brokers to ensure that there is enough space for message storage"
+    },
+    {
+      "name": "cell_15",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "(host | host_name=$HOST_NAME) union (pod | k8s_cluster_name=$K8S_CLUSTER_NAME | namespace=$NAMESPACE) | `df -h`"
+    },
+    {
+      "name": "cell_16",
+      "type": "MARKDOWN",
+      "enabled": true,
+      "content": "## Check the network connectivity between Kafka brokers to identify any issues with the network configuration."
+    },
+    {
+      "name": "cell_17",
+      "type": "OP_LANG",
+      "enabled": true,
+      "content": "host | host_name=$HOST_NAME | invoke_network_checker($BROKER_2_IP, $BROKER_1_IP)"
+    }
+  ]
+}
